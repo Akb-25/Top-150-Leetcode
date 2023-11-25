@@ -1,18 +1,19 @@
+from collections import deque
 class Solution:
     def validPath(self, n: int, edges: List[List[int]], source: int, destination: int) -> bool:
         if source==destination:
             return True
         visited=set()
         graph={}
-        def find(current,destination):
-            if current in visited:
-                return False
-            visited.add(current)
-            connections=graph[current]
-            for i in connections:
-                if i == destination or find(i,destination):
-                    return True
-            return False
+        # def find(current,destination):
+        #     if current in visited:
+        #         return False
+        #     visited.add(current)
+        #     connections=graph[current]
+        #     for i in connections:
+        #         if i == destination or find(i,destination):
+        #             return True
+        #     return False
         for edge in edges:
             if edge[0] not in graph:
                 graph[edge[0]] = [edge[1]]
@@ -22,4 +23,15 @@ class Solution:
                 graph[edge[1]] = [edge[0]]
             else:
                 graph[edge[1]].append(edge[0])
-        return find(source,destination)
+        # return find(source,destination)
+        queue=deque([source])
+
+        while queue:
+            current=queue.popleft()
+            if current==destination:
+                return True
+            if current in visited:
+                continue
+            connections=graph[current]
+            queue.extend(connections)
+        return False
